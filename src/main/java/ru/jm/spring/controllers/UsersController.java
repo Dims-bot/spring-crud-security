@@ -16,18 +16,10 @@ import javax.validation.Valid;
 @RequestMapping("/users") // для всех контроллеров пред их персоналтным "адресом"
 public class UsersController {
 
-    //private final UserDAOImplementation userDao;
-
-//    @Autowired
-//    private UserDAO userDao;
-
-    @Autowired
+    //@Autowired
     UserService userService;
 
-//    @Autowired
-//    public UsersController (UserDAOImplementation userDao) {
-//        this.userDao = userDao;
-//    }
+    public UsersController(UserService userService) {this.userService = userService;}
 
     @GetMapping()
     public String getAllUsers(Model model) {     // get all users from DAO & pass to showing by thymeleaf
