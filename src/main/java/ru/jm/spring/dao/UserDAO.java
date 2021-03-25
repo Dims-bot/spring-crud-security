@@ -9,6 +9,8 @@ public interface UserDAO {
 
     public User getUserById(int id);
 
+    public User getUserByUsername(String username);
+
     public void save(User user);
 
     public void updateUser(int id, User updatedUser);

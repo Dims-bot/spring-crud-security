@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://thymeleaf.org">
+
 <!--<head>-->
 <!--    <meta charset="UTF-8">-->
 <!--    <title>All users</title>-->
@@ -51,20 +52,22 @@
 
     <tr th:each="user, state : ${users}"
         class="row" th:classappend="${state.odd} ? 'odd-row' : 'even-row'">
-
-        <td th:href="@{/users/{id}(id=${user.getId()})}"
+        <td
+            th:text="${user.getUsername()}">Username name
+        </td>
+        <td
             th:text="${user.getFirstName()}">First name
         </td>
-        <td th:href="@{/users/{id}(id=${user.getId()})}"
+        <td th:href="@{/users/admin/{id}(id=${user.getId()})}"
             th:text="${user.getLastName()}">Last name
         </td>
         <td th:text="${user.getAge()}">Age</td>
         <td>
-            <form th:method="DELETE" th:action="@{/users/{id}(id=${user.getId()})}">
+            <form th:method="DELETE" th:action="@{/users/admin/{id}(id=${user.getId()})}">
                 <input type="submit" value="Delete"/>
             </form>
             <br>
-            <form th:method="GET" th:action="@{/users/{id}(id=${user.getId()})}">
+            <form th:method="GET" th:action="@{/users/admin/{id}(id=${user.getId()})}">
                 <input type="submit" value="Edit"/>
             </form>
         </td>
@@ -74,7 +77,7 @@
 </table>
 <br>
 
-<a href="/users/new">Add new user</a>
+<a href="/users/admin/new">Add new user</a>
 
 </body>
 </html>

@@ -17,9 +17,7 @@ public class UserDAOImplementation implements UserDAO {
 
     @Override
     public List<User> getAllUsers() {
-//        Session session = sessionFactory.getCurrentSession();
-//        TypedQuery<User> query = session.createQuery("from User", User.class);
-//        List<User> allUsers = query.getResultList();
+
         EntityManager em = entityManagerFactory.createEntityManager();
         TypedQuery<User> query = em.createQuery("from User", User.class);
         List<User> allUsers = query.getResultList();
@@ -28,21 +26,23 @@ public class UserDAOImplementation implements UserDAO {
     }
 
     public User getUserById(int id) {
-//        Session session = sessionFactory.getCurrentSession();
-//        User user = session.get(User.class, id);
-//        return user;
+
         EntityManager em = entityManagerFactory.createEntityManager();
         User user = em.find(User.class, id);
         return user;
-
-
-        //return users.stream().filter(user -> user.getId() == id).findAny().orElse(null);
     }
+
+    @Override
+    public User getUserByUsername(String username) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        User user = em.find(User.class, username);
+
+        return user;
+    }
+
 
     public void save(User user) {
         EntityManager em = entityManagerFactory.createEntityManager();
-//        Session session = sessionFactory.getCurrentSession();
-//        session.saveOrUpdate(user);
 
         em.getTransaction().begin();
         em.persist(user);
@@ -59,6 +59,8 @@ public class UserDAOImplementation implements UserDAO {
         userToBeUpdated.setFirstName(updatedUser.getFirstName());
         userToBeUpdated.setLastName(updatedUser.getLastName());
         userToBeUpdated.setAge(updatedUser.getAge());
+        //userToBeUpdated.getUsername();
+        userToBeUpdated.getPassword();
         em.getTransaction().commit();
 
     }

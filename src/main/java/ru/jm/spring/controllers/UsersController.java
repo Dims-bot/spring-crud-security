@@ -11,9 +11,10 @@ import ru.jm.spring.model.User;
 import ru.jm.spring.service.UserService;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
-@RequestMapping("/users") // для всех контроллеров пред их персоналтным "адресом"
+//@RequestMapping("/users") // для всех контроллеров пред их персоналтным "адресом"
 public class UsersController {
 
     //@Autowired
@@ -21,14 +22,14 @@ public class UsersController {
 
     public UsersController(UserService userService) {this.userService = userService;}
 
-    @GetMapping()
+    @GetMapping("/users/admin")
     public String getAllUsers(Model model) {     // get all users from DAO & pass to showing by thymeleaf
         model.addAttribute("users", userService.getAllUsers());
 
         return "users/getAllUsers";
     }
 
-    @GetMapping("/{id}")                       // insert some number and the number will be use as argument the method
+    @GetMapping("/users/admin/{id}")                       // insert some number and the number will be use as argument the method
     public String getUserById(@PathVariable("id") int id, Model model) { // through @PathVariable in int id will be number from url
         model.addAttribute("user", userService.getUserById(id));
 
@@ -36,28 +37,28 @@ public class UsersController {
         return "users/getUserByID";
     }
 
-    @GetMapping("/new")
+    @GetMapping("/users/admin/new")
     public String newUser(Model model) {
         model.addAttribute("user", new User());
         return "users/newUser";
     }
 
-    @PostMapping()
+    @PostMapping("users/admin")
     public String createNewUser(@ModelAttribute("user") @Valid User user,
                                 BindingResult bindingResult) {
         if (bindingResult.hasErrors())
             return "users/newUser";
         userService.save(user);
-        return "redirect:/users";
+        return "redirect:/users/getAllUsers";
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("/users/admin/{id}/edit")
     public String editUserById(Model model, @PathVariable("id") int id) {
         model.addAttribute("user", userService.getUserById(id));
         return "users/edit";
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("users/admin/{id}")
     public String updateUserById(@ModelAttribute("user") @Valid User user,
                                  BindingResult bindingResult, @PathVariable("id") int id) {
         if(bindingResult.hasErrors())
@@ -65,14 +66,35 @@ public class UsersController {
         userService.updateUser(id, user);
         //userService.save(user);
 
-        return "redirect:/users";
+        return "redirect:/users/edit";
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("users/admin/{id}")
     public String deleteUserById(@PathVariable("id") int id) {
         userService.deleteUser(id);
-        return "redirect:/users";
+        return "redirect:/users/getAllUsers";
     }
+
+    //@ResponseBody
+    @GetMapping("users/user")
+    public String getUserByLogin (Principal principal, Model model) {
+        String name= principal.getName();
+        model.addAttribute("user", userService.getUserByUsername(name));
+        return "users/user";
+    }
+
+    @GetMapping("/login")
+    public String loginPage() {
+        return "users/login";
+    }
+
+    // Login form with error
+//    @RequestMapping("/login-error")
+//    public String loginError(Model model) {
+//        model.addAttribute("loginError", true);
+//        return "users/login";
+//    }
+
 
 
 
